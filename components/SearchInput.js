@@ -7,7 +7,7 @@ export default function SearchInput({ $target, initialState, onChange }) {
 
   this.render = () => {
     this.$element.innerHTML = `
-      <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요." value="${this.state}">
+      <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요." value="${this.state}" autofocus>
     `;
   };
 
