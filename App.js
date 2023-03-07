@@ -4,7 +4,9 @@ import SearchInput from "./components/SearchInput.js";
 import SelectedLanguages from "./components/SelectedLanguages.js";
 
 export default function App({ $target }) {
-  this.state = {
+  const prevState = JSON.parse(localStorage.getItem("state"));
+
+  this.state = prevState || {
     fetchedLanguages: [],
     selectedLanguages: [],
     keyword: "",
@@ -15,22 +17,25 @@ export default function App({ $target }) {
       ...this.state,
       ...nextState,
     };
+
     suggestion.setState({
       selectedIndex: 0,
       items: this.state.fetchedLanguages,
       keyword: this.state.keyword,
     });
     selectedLanguages.setState(this.state.selectedLanguages);
+
+    localStorage.setItem("state", JSON.stringify(this.state));
   };
 
   const selectedLanguages = new SelectedLanguages({
     $target,
-    initialState: [],
+    initialState: this.state.selectedLanguages,
   });
 
   const searchInput = new SearchInput({
     $target,
-    initialState: "",
+    initialState: this.state.keyword,
     onChange: async (keyword) => {
       if (keyword.length === 0) {
         this.setState({
@@ -52,8 +57,8 @@ export default function App({ $target }) {
     $target,
     initialState: {
       selectedIndex: 0,
-      items: [],
-      keyword: "",
+      items: this.state.fetchedLanguages,
+      keyword: this.state.keyword,
     },
     onSelect: (language) => {
       alert(language);
