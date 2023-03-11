@@ -7,6 +7,7 @@ export default function App({ $target }) {
   const prevState = JSON.parse(localStorage.getItem("state"));
 
   this.state = prevState || {
+    timerId: 0,
     fetchedLanguages: [],
     selectedLanguages: [],
     keyword: "",
@@ -36,19 +37,25 @@ export default function App({ $target }) {
   const searchInput = new SearchInput({
     $target,
     initialState: this.state.keyword,
-    onChange: async (keyword) => {
+    onChange: (keyword) => {
       if (keyword.length === 0) {
         this.setState({
           fetchedLanguages: [],
           keyword,
         });
       } else {
-        const languages = await fetchLanguages(keyword);
+        if (this.timerId) {
+          clearTimeout(this.timerId);
+        }
 
-        this.setState({
-          fetchedLanguages: languages,
-          keyword,
-        });
+        this.timerId = setTimeout(async () => {
+          const languages = await fetchLanguages(keyword);
+
+          this.setState({
+            fetchedLanguages: languages,
+            keyword,
+          });
+        }, 500);
       }
     },
   });
