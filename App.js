@@ -3,6 +3,8 @@ import Suggestion from "./components/Suggestion.js";
 import SearchInput from "./components/SearchInput.js";
 import SelectedLanguages from "./components/SelectedLanguages.js";
 
+const MAX_SELECTED_LANGUAGES_COUNT = 5;
+
 export default function App({ $target }) {
   const prevState = JSON.parse(localStorage.getItem("state"));
 
@@ -80,6 +82,10 @@ export default function App({ $target }) {
       }
 
       nextSelectedLanguages.push(language);
+
+      if (nextSelectedLanguages.length > MAX_SELECTED_LANGUAGES_COUNT) {
+        nextSelectedLanguages.splice(0, 1);
+      }
 
       this.setState({
         ...this.setState,
